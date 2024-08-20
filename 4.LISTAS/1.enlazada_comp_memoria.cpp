@@ -253,7 +253,8 @@ int main(){
 
 
     liberarLista(l);
+    liberarLista(l2);
 
 }
 
-// g++ 1.enlazada_sin_comp_memoria.cpp -o ej1
+// g++ 1.enlazada_comp_memoria.cpp -o ej1
