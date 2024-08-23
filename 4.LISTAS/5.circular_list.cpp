@@ -19,33 +19,51 @@ bool isEmpty(lista l){
    return  l == NULL;
 }
 
+// crear un nodo
+lista createNode(int data){
+    lista nuevo  = new nodo;
+    nuevo -> elem = data;
+    nuevo -> sig = NULL;
+    return nuevo;
+}
+
 
 // devuelve una lista que es copia de la otra sin su primer elemento
 lista resto(lista l) {
     if (isEmpty(l)) {
-        return NULL; // If the list is empty, return NULL
+        return NULL; // Return NULL if the list is empty
     }
 
-    // If there's only one element in the list, return NULL because there's no "rest"
+    // If the list has only one element, return NULL because there's no "rest"
     if (l->sig == l) {
         return NULL;
     }
 
-    // Create a new head for the list (which will be the second element in the original list)
-    lista nuevo = l->sig;
+    // Create a new list to store the elements after the first
+    lista nuevo = NULL;
+    lista last = NULL;
 
-    // Find the last element in the list to update its `sig` pointer
-    lista temp = l;
-    while (temp->sig != l) {
+    // Start from the second element
+    lista temp = l->sig;
+    
+    do {
+        lista nuevoNodo = createNode(temp->elem);
+        if (nuevo == NULL) {
+            nuevo = nuevoNodo;  // Set the new list head
+            last = nuevo;
+        } else {
+            last->sig = nuevoNodo; // Append to the new list
+            last = nuevoNodo;
+        }
         temp = temp->sig;
-    }
+    } while (temp != l); // Stop when we loop back to the original head
 
-    // Update the last node's `sig` pointer to point to the new head
-    temp->sig = nuevo;
+    // Close the new list into a circular list
+    last->sig = nuevo;
 
-    // Do not delete the original first element, just return the new list starting from `nuevo`
     return nuevo;
 }
+
 
 
 
@@ -59,13 +77,7 @@ int last(lista l){
 }
 
 
-// crear un nodo
-lista createNode(int data){
-    lista nuevo  = new nodo;
-    nuevo -> elem = data;
-    nuevo -> sig = NULL;
-    return nuevo;
-}
+
 
 // INSERTS
 
@@ -240,15 +252,15 @@ int main(){
     printf("\nPrueba de resto: \n");
     lista l2 = empty();
     l2 = resto(l1);
-    //imprimir(l1);
+    imprimir(l1);
     imprimir(l2);
     
 
     
 
     // liberar memoria
-    //freeList(l1);
-    //freeList(l2);
+    freeList(l1);
+    freeList(l2);
 
 }
 
