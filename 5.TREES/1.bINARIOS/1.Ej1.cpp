@@ -74,6 +74,19 @@ int contarElementos(AB t){
 /**
  * Arbol vacío: 0 hojas
  * No vacío: si t->iq y t-> der son vacíos sumo 1
+ * Function CountLeafNodes(node):
+    If node is NULL:
+        Return 0
+
+    If node is a leaf node (i.e., both left and right children are NULL):
+        Return 1
+
+    // Recursively count leaf nodes in the left and right subtrees
+    leftLeafCount = CountLeafNodes(node.left)
+    rightLeafCount = CountLeafNodes(node.right)
+
+    // Total number of leaf nodes is the sum of leaf nodes in left and right subtrees
+    Return leftLeafCount + rightLeafCount
  */
 int contarHojas(AB t) {
     if (t == NULL) {
@@ -132,7 +145,6 @@ void enOrden(AB t1) {
     if (t1 != nullptr) {
         enOrden(t1->izq);
         printf("%d ", t1->elem);
-        //std::cout << t1->elem << " ";
         enOrden(t1->der);
     }
 }
