@@ -20,11 +20,16 @@ typedef nodoLista * Lista;
 
 
 // Pre-orden
-void preOrden(AB t1) {
+void preOrden(AB t1, Lista &l) {
     if (t1 != nullptr) {
-        printf("%d ", t1->elem);
-        preOrden(t1->izq);
-        preOrden(t1->der);
+        // Create a new node for the list
+        Lista newNode = new nodoLista;
+        newNode->elem = t1->elem;
+        newNode->sig = l;  // Insert at the front of the list
+        l = newNode;       // Update the list head
+
+        preOrden(t1->izq, l);
+        preOrden(t1->der, l);
     }
 }
 
@@ -93,6 +98,8 @@ bool esCamino(AB b, Lista l) {
 
 
 
+/* lista con los elementos del camino más largo */
+
 
 
 
@@ -117,7 +124,20 @@ Lista nuevoNodoLista(uint elem) {
     return nuevo;
 }
 
-// Test the esCamino function
+
+
+// helper: print list
+void imprimirLista(Lista l){
+    while (l != NULL){
+        printf("%d ", l -> elem);
+        l = l -> sig;
+    }
+    printf("\n");
+}
+
+
+
+// Test
 int main() {
     // Create a tree
     AB raiz = nuevoNodoAB(1);
@@ -128,6 +148,7 @@ int main() {
     raiz->der->izq = nuevoNodoAB(6);
     raiz->der->der = nuevoNodoAB(7);
 
+    
     // Create a list that matches a path in the tree (e.g., 1 -> 2 -> 4)
     Lista camino = nuevoNodoLista(1);
     camino->sig = nuevoNodoLista(2);
@@ -135,6 +156,30 @@ int main() {
 
      // Print if the list is a valid path in the tree
     printf(esCamino(raiz, camino) ? "El camino es válido." : "El camino no es válido.");
+
+
+    //
+    printf("\nPrueba de pre-orden");
+    Lista l1 = NULL;
+    preOrden(raiz, l1);
+    imprimirLista(l1);
+
+
+    printf("\nPrueba camino más largo\n");
+    AB raiz2 = nuevoNodoAB(1);               // Root node
+    raiz2->izq = nuevoNodoAB(2);             // Left subtree
+    raiz2->der = nuevoNodoAB(3);             // Right subtree
+    raiz2->izq->izq = nuevoNodoAB(4);        // Left-left
+    raiz2->izq->der = nuevoNodoAB(5);        // Left-right
+    raiz2->der->der = nuevoNodoAB(6);        // Right-right
+    raiz2->izq->izq->izq = nuevoNodoAB(7);   // Left-left-left
+
+    // Find the longest path
+    //Lista caminoMLargo = caminoMasLargo(raiz);
+
+    // Print the longest path
+    //printf("Camino más largo: ");
+    //imprimirLista(caminoMLargo);
 
 }
 
