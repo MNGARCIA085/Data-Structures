@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 // Definiciones generales
 struct NodoQ {
     int dato;
