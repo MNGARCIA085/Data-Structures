@@ -47,10 +47,10 @@ void encolar(TcolaPrio& colaPrio, int dato) {
 
 
 // filtrado descendente
-void filtradoDescendente(tipo_h* arreglo, int n, int pos){
+void filtradoDescendente2(tipo_h* arreglo, int n, int pos){
    while (2*pos<=n){
        int pos_hijo = 2*pos;
-       if ( (pos_hijo+1 <= n) && (arreglo[pos_hijo].dato > arreglo[pos_hijo+1].dato)){
+       if ( pos_hijo+1 <= n && arreglo[pos_hijo].dato > arreglo[pos_hijo+1].dato){
            pos_hijo = pos_hijo + 1;
        }
        if (arreglo[pos_hijo].dato < arreglo[pos].dato){
@@ -63,19 +63,52 @@ void filtradoDescendente(tipo_h* arreglo, int n, int pos){
 }
 
 
+void filtradoDescendente(tipo_h* arreglo, int n, int pos) {
+    while (2 * pos <= n) {
+        int pos_hijo = 2 * pos;
+        if (pos_hijo + 1 <= n && arreglo[pos_hijo].dato > arreglo[pos_hijo + 1].dato) {
+            pos_hijo++;
+        }
+
+        // Imprimir los valores antes del intercambio
+        printf("Antes del intercambio: pos = %d, pos_hijo = %d, arreglo[pos] = %d, arreglo[pos_hijo] = %d\n",
+               pos, pos_hijo, arreglo[pos].dato, arreglo[pos_hijo].dato);
+
+        if (arreglo[pos].dato > arreglo[pos_hijo].dato) {
+            tipo_h aux = arreglo[pos];
+            arreglo[pos] = arreglo[pos_hijo];
+            arreglo[pos_hijo] = aux;
+            pos = pos_hijo;
+
+            // Imprimir los valores después del intercambio
+            printf("Después del intercambio: pos = %d, arreglo[pos] = %d\n", pos, arreglo[pos].dato);
+        } else {
+            break;
+        }
+    }
+}
+
+
+
 // desencolar
-int desencolar(TcolaPrio &colaPrio){
+int desencolar(TcolaPrio &colaPrio) {
     int aux = 0;
-    if (colaPrio -> tope > 0){
-        aux = colaPrio -> arreglo[1].dato;
-        colaPrio -> arreglo[1] = colaPrio -> arreglo[colaPrio -> tope];
-        colaPrio->tope--;
-        if (colaPrio -> tope > 0){
+    if (colaPrio->tope > 0) {
+        aux = colaPrio->arreglo[1].dato;  // Guardar el dato con mayor prioridad
+        colaPrio->arreglo[1] = colaPrio->arreglo[colaPrio->tope];  // Mover el último al tope
+        colaPrio->tope--;  // Reducir el tope
+
+        // Llamar a filtrado descendente si hay elementos restantes
+        if (colaPrio->tope > 0) {
+            printf("Antes de filtradoDescendente: tope = %d, arreglo[1] = %d\n", colaPrio->tope, colaPrio->arreglo[1].dato);
             filtradoDescendente(colaPrio->arreglo, colaPrio->tope, 1);
+            printf("Después de filtradoDescendente: tope = %d, arreglo[1] = %d\n", colaPrio->tope, colaPrio->arreglo[1].dato);
+
         }
     }
     return aux;
 }
+
 
 
 
@@ -101,34 +134,49 @@ void imprimir(TcolaPrio colaPrio) {
 }
 
 
-
-
-// imprimir el heap (que en realidad es un árbol) por niveles
-void imprimirHeapPorNiveles(TcolaPrio colaPrio) {
-    if (colaPrio == NULL) {
-        printf("La cola está vacía.\n");
+// imprime el heap por niveles (recuerdo que el heap es un árbol)
+void imprimirCola(TcolaPrio colaPrio) {
+    if (colaPrio == NULL || colaPrio->tope == 0) {
+        printf("\n");
         return;
     }
-    
-    int nivel = 0;
-    int elementosEnNivel = 1; // Cantidad de elementos en el nivel actual
-    int cont = 0; // Contador de elementos impresos
 
-    printf("Heap por niveles:\n");
+    int nivel = 1;             // Nivel actual
+    int elementosEnNivel = 1;   // Cantidad de elementos en el nivel actual
+    int cont = 0;               // Contador de elementos impresos en el nivel actual
+    int num_envio = 1;          // Contador de número de envíos
+
+    // Imprimir el primer nivel
+    printf("\nNivel %d\n", nivel);
+
     for (int i = 1; i <= colaPrio->tope; i++) {
-        printf("%d ", colaPrio->arreglo[i].dato);
+        // Imprimir el número de envío
+        printf("%d) ", num_envio);
+        //imprimirTEnvio(colaEnvios->arreglo[i].envio);
+        printf("%d \n", colaPrio -> arreglo[i].dato);
+        num_envio++;
         cont++;
 
-        // Si hemos impreso todos los elementos de este nivel
+        // Verificar si se han impreso todos los elementos del nivel actual
         if (cont == elementosEnNivel) {
-            printf("\n"); // Salto de línea para el siguiente nivel
-            nivel++;
-            elementosEnNivel = 1 << nivel; // 2^nivel (número de elementos en el siguiente nivel)
-            cont = 0; // Reiniciar contador
+            // Pasar al siguiente nivel solo si quedan más elementos por imprimir
+            if (i < colaPrio->tope) {
+                printf("\n"); // Salto de línea para el siguiente nivel
+                nivel++;
+                printf("Nivel %d\n", nivel);
+                
+                elementosEnNivel = 1 << (nivel - 1); // Cantidad de elementos en el siguiente nivel
+                cont = 0;                            // Reiniciar contador para el nuevo nivel
+
+            }
         }
     }
-    printf("\n");
+    printf("\n"); // Salto de línea final
 }
+
+
+
+
 
 
 
@@ -153,7 +201,7 @@ void invertirPrioridad(TcolaPrio colaPrio) {
 
 // main
 int main() {
-    int tamanio = 5;
+    int tamanio = 6;
     TcolaPrio cola = crearCola(tamanio);
 
     // Encolar elementos
@@ -163,25 +211,27 @@ int main() {
     encolar(cola, 20);
     encolar(cola, 1);
     encolar(cola, 15);
+    encolar(cola, 17);
     
     // Imprimir cola después de encolar
     printf("Cola después de encolar: ");
     imprimir(cola);
 
-    imprimirHeapPorNiveles(cola);
+    imprimirCola(cola);
 
     // invierto la prioridad
-    invertirPrioridad(cola);
-    imprimirHeapPorNiveles(cola);
+    //invertirPrioridad(cola);
+    //imprimirCola(cola);
 
     // Desencolar elementos y mostrar el estado de la cola
-    printf("Desencolando elementos:\n");
+    printf("\nDesencolando elementos:\n");
     printf("Elemento desencolado: %d\n", desencolar(cola));
     printf("Elemento desencolado: %d\n", desencolar(cola));
 
     // Imprimir cola después de desencolar
     printf("Cola después de desencolar: ");
     imprimir(cola);
+    imprimirCola(cola);
 
     // Liberar memoria
     liberar(cola);
