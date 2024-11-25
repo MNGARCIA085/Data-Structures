@@ -5,7 +5,7 @@
 Implemente el TAD Tabla usando árboles AVL como estructura de datos.
 Desarrolle la representación del TAD (repTabla) y el código de las operaciones recuperar y copia, solamente.
 Asuma implementadas las otras operaciones del TAD. La representación elegida debería asegurar que la
-operación cantidad sea de O(1) peor caso, recuperar de O(log 2(n)) peor caso, y copia de O(n) peor caso, siendo n
+operación cantidad sea O(1) peor caso, recuperar O(log 2(n)) peor caso, y copia de O(n) peor caso, siendo n
 la cantidad de correspondencias.
 */
 

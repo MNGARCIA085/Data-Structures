@@ -24,7 +24,7 @@ struct nodoABB{
 
 struct repTabla{
     nodoABB* arbol;
-    int cantidad; // que cantidad sea o(1)
+    int cantidad; // que cantidad sea O(1)
     nodoABB* minDom; // para que minDom sea O(1)
     nodoABB* maxDom; // para que maxDom sea O(1)
 }

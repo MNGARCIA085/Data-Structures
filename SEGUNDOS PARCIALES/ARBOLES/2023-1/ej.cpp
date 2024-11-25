@@ -13,7 +13,7 @@ typedef nodoABB * ABB;
 /* Notar que en estos árboles la altura puede calcularse en O(1) peor caso:*/
 
 unsigned int altura (ABB t){
-if (t==NULL) return 0; else return t->altura;
+    if (t==NULL) return 0; else return t->altura;
 }
 
 
